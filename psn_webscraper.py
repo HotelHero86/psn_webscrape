@@ -13,7 +13,7 @@ class game:
     def __str__(self):
         return self.title + " " + self.sale_price + " " + self.regular_price
     
-my_url = "https://store.playstation.com/en-us/grid/STORE-MSF77008-WEEKLYDEALS/1"
+my_url = "https://store.playstation.com/en-us/category/3f772501-f6f8-49b7-abac-874a88ca4897/1"
 
 def getPageHTML(url):
     "opening connection and grabbing the first page, returns a page_soup"
@@ -27,7 +27,7 @@ def sort_by_price(game):
     return str(game.sale_price)
 
 # get all the containers from the page listing the sales
-containers = getPageHTML(my_url).findAll("div", {"class": "grid-cell grid-cell--category"})
+containers = getPageHTML(my_url).findAll("div", {"class": "psw-product-tile psw-interactive-root"})
 links = []
 
 #pull the URL links for each sale page
@@ -45,9 +45,9 @@ for link in links:
 
 #add each page after the first to the sale_page list
 for sale_page in sale_pages:
-    nextpage = sale_page.find("a", {"class" : "paginator-control__next paginator-control__arrow-navigation internal-app-link ember-view"})
+    nextpage = sale_page.find("a", {"class" : "psw-icon psw-icon--chevron-right psw-icon psw-icon-size2 psw-icon--chevron-right"})
     if nextpage is not None:
-        sale_pages.append(getPageHTML("https://store.playstation.com" + nextpage["href"]))
+        sale_pages.append(getPageHTML(my_url + nextpage["href"]))
 
 #creating the list of games
 games = []
@@ -55,19 +55,19 @@ games = []
 #iterate through each sale page that was grabbed
 for sale_page in sale_pages:
 
-    cells = sale_page.findAll("div", {"class" : "grid-cell__body"})
+    cells = sale_page.findAll("div", {"class" : "psw-product-tile psw-interactive-root"})
     #from every cell, make a game object with its name and prices and add it to a list
     for cell in cells:
 
         title = cell.find("span").getText()
-        if cell.find("div", {"class" : "price"}) is None:
+        if cell.find("span", {"data-qa" : "ems-sdk-grid#productTile0#price#display-price"}) is None:
             reg_price = "0.00"
         else:
-            reg_price = float(cell.find("div", {"class" : "price"}).getText().replace("$",""))
-        if cell.find("h3", {"class" : "price-display__price"}) is None:
+            reg_price = float(cell.find("data-qa" : "ems-sdk-grid#productTile0#price#display-price").getText().replace("$",""))
+        if cell.find("h3", {"data-qa" : "ems-sdk-grid#productTile0#price#display__price"}) is None:
             sale_price = "0.00"
         else: 
-            sale_price = float(cell.find("h3", {"class" : "price-display__price"}).getText().replace("$",""))
+            sale_price = float(cell.find("h3", {"data-qa" : "ems-sdk-grid#productTile0#price#display__price"}).getText().replace("$",""))
 
         games.append(game(title, sale_price, reg_price))
 
