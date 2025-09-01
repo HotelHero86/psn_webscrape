@@ -13,7 +13,7 @@ class game:
     def __str__(self):
         return self.title + " " + self.sale_price + " " + self.regular_price
     
-my_url = "https://store.playstation.com/en-us/category/3f772501-f6f8-49b7-abac-874a88ca4897/1"
+my_url = "https://store.playstation.com/en-us/pages/deals"
 
 def getPageHTML(url):
     "opening connection and grabbing the first page, returns a page_soup"
@@ -63,7 +63,7 @@ for sale_page in sale_pages:
         if cell.find("span", {"data-qa" : "ems-sdk-grid#productTile0#price#display-price"}) is None:
             reg_price = "0.00"
         else:
-            reg_price = float(cell.find("data-qa" : "ems-sdk-grid#productTile0#price#display-price").getText().replace("$",""))
+            reg_price = float(cell.find("span", {"data-qa" : "ems-sdk-grid#productTile0#price#display-price"}).getText().replace("$",""))
         if cell.find("h3", {"data-qa" : "ems-sdk-grid#productTile0#price#display__price"}) is None:
             sale_price = "0.00"
         else: 
