@@ -60,14 +60,14 @@ for sale_page in sale_pages:
     for cell in cells:
 
         title = cell.find("span").getText()
-        if cell.find("span", {"data-qa" : "ems-sdk-grid#productTile0#price#display-price"}) is None:
-            reg_price = "0.00"
-        else:
-            reg_price = float(cell.find("span", {"data-qa" : "ems-sdk-grid#productTile0#price#display-price"}).getText().replace("$",""))
-        if cell.find("h3", {"data-qa" : "ems-sdk-grid#productTile0#price#price-strikethrough"}) is None:
+        if cell.find("span", {"data-qa" : "ems-sdk-grid#productTile" + str(cells.index(cell)) + "#price#display-price"}) is None:
             sale_price = "0.00"
+        else:
+            sale_price = float(cell.find("span", {"data-qa" : "ems-sdk-grid#productTile" + str(cells.index(cell)) + "#price#display-price"}).getText().replace("$",""))
+        if cell.find("s", {"data-qa" : "ems-sdk-grid#productTile" + str(cells.index(cell)) + "#price#price-strikethrough"}) is None:
+            reg_price = "0.00"
         else: 
-            sale_price = float(cell.find("h3", {"data-qa" : "ems-sdk-grid#productTile0#price#price-strikethrough"}).getText().replace("$",""))
+            reg_price = float(cell.find("s", {"data-qa" : "ems-sdk-grid#productTile" + str(cells.index(cell)) + "#price#price-strikethrough"}).getText().replace("$",""))
 
         games.append(game(title, sale_price, reg_price))
 
