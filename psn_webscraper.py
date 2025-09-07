@@ -38,9 +38,11 @@ for container in containers:
 
 #grab each sale page that is linked
 sale_pages = []
+i = 1
 
 for link in links:
-    sale_page = getPageHTML(my_url)
+    i = i + 1
+    sale_page = getPageHTML(my_url + str(i))
     sale_pages.append(sale_page)
 
 #add each page after the first to the sale_page list
@@ -80,10 +82,10 @@ textfilename = "D:\\python\\psnscraper\\games" + date + ".txt"
 csvfilename = "D:\\python\\psnscraper\\games" + date + ".csv"
 
 f2 = open(csvfilename, "w")
-f2.write("Title,Sale Price,Regular Price\n")
+f2.write("Title,Sale Price,Regular Price,Sale Percentage\n")
 for x in games:
     try:
-        f2.write("{},${},${}\n".format(x.title.replace(",","|").replace("\t","").replace(";","|"), str(x.sale_price), str(x.regular_price)))
+        f2.write("{},${},${},{}%\n".format(x.title.replace(",","|").replace("\t","").replace(";","|"), str(x.sale_price), str(x.regular_price), str(int(100 * (1 -(x.sale_price / x.regular_price))))))
     except:
         continue
 
