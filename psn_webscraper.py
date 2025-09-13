@@ -23,33 +23,19 @@ def getPageHTML(url):
 
     return soup(page_html, "html.parser")
 
-def sort_by_price(game):
-    return str(game.sale_price)
-
-# get all the containers from the page listing the sales
-containers = getPageHTML(my_url).find_all("div", {"class": "psw-product-tile psw-interactive-root"})
-links = []
-
-#pull the URL links for each sale page
-for container in containers:
-    link = container.find("a", {"class" : "internal-app-link ember-view"})
-    links.append(link)
+#still need to find a way to calculate the number of pages
+#rather than hardcode
+number_of_pages = 150
 
 
-#grab each sale page that is linked
+#grab each sale page
 sale_pages = []
-i = 1
 
-for link in links:
-    i = i + 1
-    sale_page = getPageHTML(my_url + str(i))
+while number_of_pages >= 1:
+    sale_page = getPageHTML(my_url)
+    sale_page = getPageHTML(my_url + str(number_of_pages))
     sale_pages.append(sale_page)
-
-#add each page after the first to the sale_page list
-for sale_page in sale_pages:
-    nextpage = sale_page.find("a", {"data-qa" : "ems-sdk-grid#ems-sdk-top-paginator-root#next"})
-    if nextpage is not None:
-        sale_pages.append(getPageHTML(my_url + nextpage["href"]))
+    number_of_pages = number_of_pages - 1
 
 #creating the list of games
 games = []
@@ -73,14 +59,12 @@ for sale_page in sale_pages:
 
         games.append(game(title, sale_price, reg_price))
 
-        
-games.sort(reverse=True,key=sort_by_price)
-
 #adding the list to a csv file named for today's date
 date = str(datetime.today().strftime("%b-%d-%Y"))
-textfilename = "D:\\python\\psnscraper\\games" + date + ".txt"
-csvfilename = "D:\\python\\psnscraper\\games" + date + ".csv"
+textfilename = "PSNScrapedGames" + date + ".txt"
+csvfilename = "PSNScrapedGames" + date + ".csv"
 
+#write to .csv file
 f2 = open(csvfilename, "w")
 f2.write("Title,Sale Price,Regular Price,Sale Percentage\n")
 for x in games:
