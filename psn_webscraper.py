@@ -69,7 +69,7 @@ f2 = open(csvfilename, "w")
 f2.write("Title,Sale Price,Regular Price,Sale Percentage\n")
 for x in games:
     try:
-        f2.write("{},${},${},{}%\n".format(x.title.replace(",","|").replace("\t","").replace(";","|"), str(x.sale_price), str(x.regular_price), str(int(100 * (1 -(x.sale_price / x.regular_price))))))
+        f2.write("{},{},{},{}\n".format(x.title.replace(",","|").replace("\t","").replace(";","|"), str(x.sale_price), str(x.regular_price), str(int(100 * (1 -(x.sale_price / x.regular_price))))))
     except:
         continue
 
